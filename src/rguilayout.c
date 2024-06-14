@@ -162,8 +162,8 @@
 #include "gui_panel_controls_palette.h"    // GUI: Controls Palette
 
 #define CODEGEN_IMPLEMENTATION
-#include "codegen.h"                        // Code generation functions
-#include "code_templates.h"                 // Code template files (char buffers)
+#include "codegen.php.h"                        // Code generation functions
+#include "code_templates.php.h"                 // Code template files (char buffers)
 
 #define GUI_WINDOW_CODEGEN_IMPLEMENTATION
 #include "gui_window_codegen.h"             // GUI: Code Generation Window
@@ -279,7 +279,7 @@ static bool IsFileNameValid(const char *fileName);          // Check if fileName
 int main(int argc, char *argv[])
 {
 #if !defined(_DEBUG)
-    SetTraceLogLevel(LOG_NONE);         // Disable raylib trace log messsages
+    SetTraceLogLevel(RAYLIB_LOG_NONE);         // Disable raylib trace log messsages
 #endif
 #if defined(PLATFORM_DESKTOP)
     // Command-line usage mode
@@ -3192,7 +3192,7 @@ int main(int argc, char *argv[])
             if (windowCodegenState.btnExportCodePressed)
             {
                 if (windowCodegenState.codeTemplateActive == 1) strcpy(outFileName, TextFormat("gui_%s.h", config.name));
-                else strcpy(outFileName, TextFormat("%s.c", config.name));
+                else strcpy(outFileName, TextFormat("%s.php", config.name));
 
                 showExportFileDialog = true;
                 windowCodegenState.windowActive = false;
@@ -3330,9 +3330,8 @@ int main(int argc, char *argv[])
                 if (result == 1)
                 {
                     // Check for valid extension and make sure it is
-                    if (!IsFileNameValid(GetFileName(outFileName))) strcpy(outFileName, "layout_code.c");
-                    if ((GetFileExtension(outFileName) == NULL) ||
-                        (!IsFileExtension(outFileName, ".c") && !IsFileExtension(outFileName, ".h"))) strcat(outFileName, ".h\0");
+                    if (!IsFileNameValid(GetFileName(outFileName))) strcpy(outFileName, "layout_code.php");
+                    if ((GetFileExtension(outFileName) == NULL) || (!IsFileExtension(outFileName, ".php"))) strcat(outFileName, ".php\0");
 
                     // Write code string to file
                     FILE *ftool = fopen(outFileName, "wt");
@@ -3498,8 +3497,7 @@ static void ProcessCommandLine(int argc, char *argv[])
         {
             if (((i + 1) < argc) && (argv[i + 1][0] != '-'))
             {
-                if (IsFileExtension(argv[i + 1], ".c") ||
-                    IsFileExtension(argv[i + 1], ".h"))
+                if (IsFileExtension(argv[i + 1], ".php"))
                 {
                     strcpy(outFileName, argv[i + 1]);   // Read output filename
                 }
@@ -3513,8 +3511,7 @@ static void ProcessCommandLine(int argc, char *argv[])
         {
             if (((i + 1) < argc) && (argv[i + 1][0] != '-'))
             {
-                if (IsFileExtension(argv[i + 1], ".c") ||
-                    IsFileExtension(argv[i + 1], ".h"))
+                if (IsFileExtension(argv[i + 1], ".php"))
                 {
                     strcpy(templateFile, argv[i + 1]);   // Read template filename
                 }
